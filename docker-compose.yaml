@@ -1,0 +1,13 @@
+version: "3.3"
+
+services:
+
+  php:
+    image: abiosoft/caddy:php
+    volumes:
+     - ./:/srv
+     - ./Caddyfile:/etc/Caddyfile
+    ports:
+      - 80:2015
+    environment:
+      MY_ENV: foobaz

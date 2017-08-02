@@ -1,0 +1,17 @@
+0.0.0.0
+
+browse
+
+fastcgi / 127.0.0.1:9000 php
+
+rewrite {
+    to {path} {path}/ /index.php?{query}
+}
+
+startup php-fpm7
+
+log stdout
+
+errors stdout
+
+root /srv/public
