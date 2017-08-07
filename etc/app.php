@@ -9,6 +9,7 @@ return [
     DI\Container::class => object(),
     App\Http\HttpNotFound::class => object(),
     App\Http\HttpRouter::class => object(),
+    App\Http\HttpLogger::class => object(),
 
     Middlewares\Utils\Dispatcher::class => object()
         ->constructor(get('http-stack')),
@@ -16,6 +17,8 @@ return [
     'env' => env('MY_ENV'),
 
     'http-stack' => [
+
+        get(App\Http\HttpLogger::class),
 
         object(App\Http\HttpRouteDispatcher::class)
             ->constructorParameter('matcher', factory([App\Http\HttpRouter::class, 'getMatcher']))

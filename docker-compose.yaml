@@ -11,3 +11,13 @@ services:
       - 80:2015
     environment:
       MY_ENV: foobaz
+
+  react:
+    image: php:7-alpine
+    volumes:
+     - ./:/srv
+    ports:
+      - 81:80
+    command: /srv/bin/serve.php
+    environment:
+      MY_ENV: foobaz
