@@ -32,6 +32,10 @@ class HttpRouter
         $map->get('env', '/env', function(Container $container) {
             return 'Env: ' . $container->get('env') . PHP_EOL;
         });
+
+        $map->get('greet', '/greet/{name}', function($name) {
+            return 'Hello ' . $name . PHP_EOL;
+        });
     }
 
     /**

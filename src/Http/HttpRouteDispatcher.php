@@ -52,7 +52,7 @@ class HttpRouteDispatcher implements MiddlewareInterface
             return CallableHandler::execute(function () use($route, $request) {
                 return $this->container->call($route->handler, [
                     ServerRequestInterface::class => $request
-                ]);
+                ] + $route->attributes);
             });
         }
 
