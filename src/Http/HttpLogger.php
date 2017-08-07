@@ -2,11 +2,8 @@
 
 namespace App\Http;
 
-use Aura\Router\Matcher;
-use DI\Container;
 use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
-use Middlewares\Utils\CallableHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -23,15 +20,28 @@ class HttpLogger implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
-        $id = random_bytes(5);
-        $time = date(DATE_RFC3339);
+        $id = substr(bin2hex(random_bytes(5)), 0, 5);
+        $this->log($id, $request);
+        $response = $delegate->process($request);
+        $this->log($id, $request, $response);
+        return $response;
+    }
+
+    /**
+     * @param $id
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface|null $response
+     */
+    public function log($id, ServerRequestInterface $request, ResponseInterface $response = null)
+    {
+        $time = date('Y-m-d H:i:s T');
         $method = $request->getMethod();
         $uri = $request->getUri();
-        echo "$time Request : $id - $method $uri";
-        $response = $delegate->process($request);
-        $code = $response->getStatusCode();
-        $phrase = $response->getReasonPhrase();
-        echo "$time Response: $id - $method $uri => $code $phrase";
-        return $response;
+        $type = $response ? 'Response' : 'Request';
+        echo "[$time] $type($id) = $method $uri";
+        if ($response) {
+            echo ' => ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase();
+        }
+        echo PHP_EOL;
     }
 }
