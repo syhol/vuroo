@@ -2,13 +2,13 @@ version: "3.3"
 
 services:
 
-  php:
+  caddy:
     image: abiosoft/caddy:php
     volumes:
      - ./:/srv
      - ./Caddyfile:/etc/Caddyfile
     ports:
-      - 80:2015
+      - 81:2015
     environment:
       MY_ENV: foobaz
 
@@ -17,7 +17,26 @@ services:
     volumes:
      - ./:/srv
     ports:
-      - 81:80
+      - 82:80
     command: /srv/bin/serve.php
     environment:
       MY_ENV: foobaz
+
+  apache:
+    image: php:7.0-apache
+    volumes:
+     - ./:/var/www
+    ports:
+      - 83:80
+    environment:
+      MY_ENV: foobaz
+
+  nginx:
+    image: richarvey/nginx-php-fpm:php7
+    volumes:
+     - ./:/var/www
+    ports:
+      - 84:80
+    environment:
+      MY_ENV: foobaz
+      WEBROOT: /var/www/public

@@ -21,9 +21,8 @@ class HttpLogger implements MiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $id = substr(bin2hex(random_bytes(5)), 0, 5);
-        $this->log($id, $request);
         $response = $delegate->process($request);
-        $this->log($id, $request, $response);
+        $response->getBody()->write($this->buildLog($id, $request, $response));
         return $response;
     }
 
@@ -32,16 +31,16 @@ class HttpLogger implements MiddlewareInterface
      * @param ServerRequestInterface $request
      * @param ResponseInterface|null $response
      */
-    public function log($id, ServerRequestInterface $request, ResponseInterface $response = null)
+    public function buildLog($id, ServerRequestInterface $request, ResponseInterface $response = null)
     {
         $time = date('Y-m-d H:i:s T');
         $method = $request->getMethod();
         $uri = $request->getUri();
         $type = $response ? 'Response' : 'Request';
-        echo "[$time] $type($id) = $method $uri";
+        $message = "[$time] $type($id) = $method $uri";
         if ($response) {
-            echo ' => ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase();
+            $message .= ' => ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase();
         }
-        echo PHP_EOL;
+        return $message . PHP_EOL;
     }
 }
