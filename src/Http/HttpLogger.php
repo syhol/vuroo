@@ -30,6 +30,7 @@ class HttpLogger implements MiddlewareInterface
      * @param $id
      * @param ServerRequestInterface $request
      * @param ResponseInterface|null $response
+     * @return string
      */
     public function buildLog($id, ServerRequestInterface $request, ResponseInterface $response = null)
     {
