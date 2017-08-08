@@ -8,5 +8,6 @@ $builder->addDefinitions(__DIR__ . '/etc/app.php');
 
 /** @var \DI\Container $container */
 $container = $builder->build();
+$container->set(DI\Container::class, $container);
 
 return $container;

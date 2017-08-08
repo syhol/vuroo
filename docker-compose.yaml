@@ -28,15 +28,16 @@ services:
      - ./:/var/www
     ports:
       - 83:80
+    command: /bin/bash -c 'a2enmod rewrite; apache2-foreground'
     environment:
       MY_ENV: foobaz
 
   nginx:
-    image: richarvey/nginx-php-fpm:php7
+    image: webdevops/php-nginx:alpine-3-php7
     volumes:
-     - ./:/var/www
+     - ./:/app
     ports:
       - 84:80
     environment:
       MY_ENV: foobaz
-      WEBROOT: /var/www/public
+      WEB_DOCUMENT_ROOT: /app/public
