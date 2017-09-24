@@ -6,9 +6,23 @@ use Interop\Http\ServerMiddleware\DelegateInterface;
 use Interop\Http\ServerMiddleware\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 
 class HttpLogger implements MiddlewareInterface
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * HttpLogger constructor.
+     * @param LoggerInterface $logger
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Process a server request and return a response.
@@ -21,8 +35,9 @@ class HttpLogger implements MiddlewareInterface
     public function process(ServerRequestInterface $request, DelegateInterface $delegate)
     {
         $id = substr(bin2hex(random_bytes(5)), 0, 5);
+        $this->logger->info($this->buildLog($id, $request));
         $response = $delegate->process($request);
-        $response->getBody()->write($this->buildLog($id, $request, $response));
+        $this->logger->info($this->buildLog($id, $request, $response), ['foo' => 'bar']);
         return $response;
     }
 
@@ -34,13 +49,12 @@ class HttpLogger implements MiddlewareInterface
      */
     public function buildLog($id, ServerRequestInterface $request, ResponseInterface $response = null)
     {
-        $time = date('Y-m-d H:i:s T');
         $method = $request->getMethod();
-        $uri = $request->getUri();
+        $uri = $request->getUri()->getPath();
         $type = $response ? 'Response' : 'Request';
-        $message = "[$time] $type($id) = $method $uri";
+        $message = "$type($id) = $method $uri";
         if ($response) {
-            $message .= ' => ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase();
+            $message .= ' => ' . $response->getStatusCode();
         }
         return $message . PHP_EOL;
     }

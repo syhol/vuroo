@@ -6,7 +6,7 @@ services:
     image: abiosoft/caddy:php
     volumes:
      - ./:/srv
-     - ./Caddyfile:/etc/Caddyfile
+     - ./infra/Caddyfile:/etc/Caddyfile
     ports:
       - 81:2015
     environment:
@@ -25,19 +25,20 @@ services:
   apache:
     image: php:7.0-apache
     volumes:
-     - ./:/var/www
+     - ./:/srv
     ports:
       - 83:80
-    command: /bin/bash -c 'a2enmod rewrite; apache2-foreground'
+    command: /srv/infra/apache.sh
     environment:
       MY_ENV: foobaz
+      APACHE_DOCUMENT_ROOT: /srv/web
 
   nginx:
     image: webdevops/php-nginx:alpine-3-php7
     volumes:
-     - ./:/app
+     - ./:/srv
     ports:
       - 84:80
     environment:
       MY_ENV: foobaz
-      WEB_DOCUMENT_ROOT: /app/public
+      WEB_DOCUMENT_ROOT: /srv/web

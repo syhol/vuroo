@@ -5,7 +5,8 @@
         "http-interop/response-sender": "^1.0",
         "middlewares/aura-router": "^0.7.0",
         "guzzlehttp/psr7": "^1.4",
-        "react/http": "^0.7.2"
+        "react/http": "^0.7.2",
+        "monolog/monolog": "^1.23"
     },
     "autoload": {
         "psr-4": {

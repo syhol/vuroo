@@ -4,6 +4,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 $builder = new DI\ContainerBuilder();
 
+$builder->useAutowiring(true);
 $builder->addDefinitions(__DIR__ . '/etc/app.php');
 
 /** @var \DI\Container $container */
