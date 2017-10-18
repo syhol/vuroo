@@ -1,8 +1,8 @@
 <?php
 
-namespace App\User\Http;
+namespace App\User\Console;
 
-class UserHttpProvider
+class UserConsoleProvider
 {
 
 }
