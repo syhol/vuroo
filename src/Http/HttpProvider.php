@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use Aura\Router\Map;
 use Aura\Router\Matcher;
 use Aura\Router\RouterContainer;
 use Middlewares\Utils\Dispatcher;
