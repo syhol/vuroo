@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Base;
+namespace App\Base\Http;
 
 use Aura\Router\Map;
 use Psr\Container\ContainerInterface;

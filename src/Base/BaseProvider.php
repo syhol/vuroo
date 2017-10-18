@@ -2,6 +2,7 @@
 
 namespace App\Base;
 
+use App\Base\Http\HttpRouteMapper;
 use Aura\Router\RouterContainer;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
