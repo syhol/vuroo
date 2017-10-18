@@ -6,6 +6,7 @@ use Aura\Router\Map;
 use Aura\Router\Matcher;
 use Aura\Router\RouterContainer;
 use DI\Container;
+use Psr\Container\ContainerInterface;
 
 class HttpRouter
 {
@@ -29,8 +30,8 @@ class HttpRouter
             return 'Welcome Home' . PHP_EOL;
         });
 
-        $map->get('env', '/env', function(Container $container) {
-            return 'Env: ' . $container->get('env') . PHP_EOL;
+        $map->get('env', '/env', function(ContainerInterface $container) {
+            return 'Env: ' . $container->get('config')['foo'] . PHP_EOL;
         });
 
         $map->get('greet', '/greet/{name}', function($name) {

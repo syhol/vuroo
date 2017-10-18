@@ -34,7 +34,7 @@ class HttpNotFound implements MiddlewareInterface
     {
         $response = $this->responseFactory->createResponse(404);
 
-        $response->getBody()->write('Could not find route: ' . $request->getUri());
+        $response->getBody()->write('Could not find route: ' . $request->getUri() . "\n");
 
         return $response;
     }

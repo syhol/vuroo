@@ -1,12 +1,11 @@
 {
     "name": "syhol/framework",
     "require": {
-        "http-interop/response-sender": "^1.0",
         "middlewares/aura-router": "^0.7.0",
-        "guzzlehttp/psr7": "^1.4",
-        "react/http": "^0.7.2",
         "monolog/monolog": "^1.23",
-        "pimple/pimple": "^3.0"
+        "pimple/pimple": "^3.0",
+        "evenement/evenement": "^3.0",
+        "zendframework/zend-diactoros": "^1.6"
     },
     "autoload": {
         "psr-4": {

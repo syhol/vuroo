@@ -12,22 +12,12 @@ services:
     environment:
       MY_ENV: foobaz
 
-  react:
-    image: php:7-alpine
-    volumes:
-     - ./:/srv
-    ports:
-      - 82:80
-    command: /srv/bin/serve.php
-    environment:
-      MY_ENV: foobaz
-
   apache:
     image: php:7.0-apache
     volumes:
      - ./:/srv
     ports:
-      - 83:80
+      - 82:80
     command: /srv/infra/apache.sh
     environment:
       MY_ENV: foobaz
@@ -38,7 +28,7 @@ services:
     volumes:
      - ./:/srv
     ports:
-      - 84:80
+      - 83:80
     environment:
       MY_ENV: foobaz
       WEB_DOCUMENT_ROOT: /srv/web
