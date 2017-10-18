@@ -2,13 +2,10 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-$builder = new DI\ContainerBuilder();
+$container = new Pimple\Container();
 
-$builder->useAutowiring(true);
-$builder->addDefinitions(__DIR__ . '/etc/app.php');
+$container->register(new App\AppProvider);
 
-/** @var \DI\Container $container */
-$container = $builder->build();
-$container->set(DI\Container::class, $container);
+$container['event']->emit('boot');
 
 return $container;
