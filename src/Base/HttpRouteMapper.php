@@ -1,26 +1,12 @@
 <?php
 
-namespace App\Http;
+namespace App\Base;
 
 use Aura\Router\Map;
-use Aura\Router\Matcher;
-use Aura\Router\RouterContainer;
-use DI\Container;
 use Psr\Container\ContainerInterface;
 
-class HttpRouter
+class HttpRouteMapper
 {
-    /**
-     * Set the RouterContainer instance.
-     *
-     * @param RouterContainer $router
-     */
-    public function __construct(RouterContainer $router)
-    {
-        $this->router = $router;
-        $this->bindRoutes($router->getMap());
-    }
-
     /**
      * @param Map $map
      */
@@ -37,13 +23,5 @@ class HttpRouter
         $map->get('greet', '/greet/{name}', function($name) {
             return 'Hello ' . $name . PHP_EOL;
         });
-    }
-
-    /**
-     * @return Matcher
-     */
-    public function getMatcher()
-    {
-        return $this->router->getMatcher();
     }
 }
