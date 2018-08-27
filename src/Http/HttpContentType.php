@@ -2,8 +2,8 @@
 
 namespace App\Http;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -27,12 +27,12 @@ class HttpContentType implements MiddlewareInterface
      * Process a server request and return a response.
      *
      * @param ServerRequestInterface $request
-     * @param DelegateInterface $delegate
+     * @param RequestHandlerInterface $next
      *
      * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
-        return $delegate->process($request)->withHeader('Content-Type', $this->contentType);
+        return $next->handle($request)->withHeader('Content-Type', $this->contentType);
     }
 }

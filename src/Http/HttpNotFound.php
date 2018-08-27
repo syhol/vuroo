@@ -2,35 +2,35 @@
 
 namespace App\Http;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
-use Middlewares\Utils\Factory\ResponseFactory;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class HttpNotFound implements MiddlewareInterface
 {
     /**
-     * @var ResponseFactory
+     * @var ResponseFactoryInterface
      */
     private $responseFactory;
 
     /**
      * HttpNotFound constructor.
-     * @param ResponseFactory $responseFactory
+     * @param ResponseFactoryInterface $responseFactory
      */
-    public function __construct(ResponseFactory $responseFactory)
+    public function __construct(ResponseFactoryInterface $responseFactory)
     {
         $this->responseFactory = $responseFactory;
     }
 
     /**
      * @param ServerRequestInterface $request
-     * @param DelegateInterface $delegate
+     * @param RequestHandlerInterface $next
      *
      * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
         $response = $this->responseFactory->createResponse(404);
 

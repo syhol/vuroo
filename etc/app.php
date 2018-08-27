@@ -8,8 +8,11 @@ use function DI\factory;
 
 return [
 
-    Middlewares\Utils\Factory\ResponseFactory::class => autowire(),
-
+    Psr\Http\Message\ResponseFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
+    Psr\Http\Message\ServerRequestFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
+    Psr\Http\Message\StreamFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
+    Psr\Http\Message\UriFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
+    
     'log-handlers' => [
         create(Monolog\Handler\StreamHandler::class)
             ->constructor('php://stderr', Monolog\Logger::INFO)

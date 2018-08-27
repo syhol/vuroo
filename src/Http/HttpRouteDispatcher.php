@@ -4,8 +4,8 @@ namespace App\Http;
 
 use Aura\Router\Matcher;
 use DI\Container;
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Middlewares\Utils\CallableHandler;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -38,24 +38,25 @@ class HttpRouteDispatcher implements MiddlewareInterface
      * Process a server request and return a response.
      *
      * @param ServerRequestInterface $request
-     * @param DelegateInterface $delegate
+     * @param RequestHandlerInterface $next
      *
      * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
         if ($route = $this->matcher->match($request)) {
             foreach ($route->attributes as $name => $value) {
                 $request = $request->withAttribute($name, $value);
             }
 
-            return CallableHandler::execute(function () use($route, $request) {
-                return $this->container->call($route->handler, [
-                    ServerRequestInterface::class => $request
-                ] + $route->attributes);
-            });
+            return (new CallableHandler(function () use($route, $request) {
+                return $this->container->call(
+                    $route->handler,
+                    [ServerRequestInterface::class => $request] + $route->attributes
+                );
+            }))->handle($request);
         }
 
-        return $delegate->process($request);
+        return $next->handle($request);
     }
 }

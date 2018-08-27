@@ -8,10 +8,10 @@ rewrite {
     to {path} {path}/ /index.php?{query}
 }
 
-startup php-fpm7
-
 log stdout
 
 errors stdout
 
 root /srv/web
+
+on startup php-fpm7 --nodaemonize

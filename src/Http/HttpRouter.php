@@ -26,7 +26,7 @@ class HttpRouter
     public function bindRoutes(Map $map)
     {
         $map->get('home', '/', function() {
-            return 'Welcome Home' . PHP_EOL;
+            return 'Welcome Home In App' . PHP_EOL;
         });
 
         $map->get('env', '/env', function(Container $container) {

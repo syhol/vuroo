@@ -2,8 +2,8 @@
 
 namespace App\Http;
 
-use Interop\Http\ServerMiddleware\DelegateInterface;
-use Interop\Http\ServerMiddleware\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LoggerInterface;
@@ -28,15 +28,15 @@ class HttpLogger implements MiddlewareInterface
      * Process a server request and return a response.
      *
      * @param ServerRequestInterface $request
-     * @param DelegateInterface $delegate
+     * @param RequestHandlerInterface $next
      *
      * @return ResponseInterface
      */
-    public function process(ServerRequestInterface $request, DelegateInterface $delegate)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
         $id = substr(bin2hex(random_bytes(5)), 0, 5);
         $this->logger->info($this->buildLog($id, $request));
-        $response = $delegate->process($request);
+        $response = $next->handle($request);
         $this->logger->info($this->buildLog($id, $request, $response), ['foo' => 'bar']);
         return $response;
     }

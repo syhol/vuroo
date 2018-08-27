@@ -1,9 +1,9 @@
 {
     "name": "syhol/framework",
     "require": {
-        "php-di/php-di": "^6.0.0-alpha4",
+        "php-di/php-di": "^6.0.0",
         "http-interop/response-sender": "^1.0",
-        "middlewares/aura-router": "^0.7.0",
+        "middlewares/aura-router": "^1.1.0",
         "guzzlehttp/psr7": "^1.4",
         "react/http": "^0.7.2",
         "monolog/monolog": "^1.23"
