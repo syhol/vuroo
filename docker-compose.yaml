@@ -18,7 +18,7 @@ services:
      - ./:/srv
     ports:
       - 82:80
-    command: /srv/bin/serve.php
+    command: /srv/bin/app serve
     environment:
       MY_ENV: foobaz
 

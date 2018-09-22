@@ -6,12 +6,23 @@ use function DI\get;
 use function DI\env;
 use function DI\factory;
 
+use React\EventLoop\LoopInterface;
+use React\EventLoop\Factory as LoopFactory;
+use Middlewares\Utils\Factory\GuzzleFactory;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
+USe Middlewares\Whoops as WhoopsMiddleware;
+
 return [
 
-    Psr\Http\Message\ResponseFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
-    Psr\Http\Message\ServerRequestFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
-    Psr\Http\Message\StreamFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
-    Psr\Http\Message\UriFactoryInterface::class => create(Middlewares\Utils\Factory\GuzzleFactory::class),
+    LoopInterface::class => factory([LoopFactory::class, 'create']),
+
+    ResponseFactoryInterface::class => create(GuzzleFactory::class),
+    ServerRequestFactoryInterface::class => create(GuzzleFactory::class),
+    StreamFactoryInterface::class => create(GuzzleFactory::class),
+    UriFactoryInterface::class => create(GuzzleFactory::class),
     
     'log-handlers' => [
         create(Monolog\Handler\StreamHandler::class)
@@ -31,6 +42,7 @@ return [
     'http-stack' => [
         autowire(App\Http\HttpContentType::class)->constructor('text/plain'),
         get(App\Http\HttpLogger::class),
+        get(App\Http\HttpErrorHandler::class),
         get(App\Http\HttpRouteDispatcher::class),
         get(App\Http\HttpNotFound::class)
     ]

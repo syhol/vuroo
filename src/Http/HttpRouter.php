@@ -33,6 +33,10 @@ class HttpRouter
             return 'Env: ' . $container->get('env') . PHP_EOL;
         });
 
+        $map->get('error', '/error', function(Container $container) {
+            throw new \Exception('nope');            
+        });
+
         $map->get('greet', '/greet/{name}', function($name) {
             return 'Hello ' . $name . PHP_EOL;
         });

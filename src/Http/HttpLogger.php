@@ -34,10 +34,13 @@ class HttpLogger implements MiddlewareInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
     {
-        $id = substr(bin2hex(random_bytes(5)), 0, 5);
-        $this->logger->info($this->buildLog($id, $request));
+        $request = $request
+            ->withAttribute('request-id', substr(bin2hex(random_bytes(7)), 0, 7))
+            ->withAttribute('start-time', microtime(true));
+
         $response = $next->handle($request);
-        $this->logger->info($this->buildLog($id, $request, $response), ['foo' => 'bar']);
+        $this->logEvent($request, $response);
+
         return $response;
     }
 
@@ -47,15 +50,27 @@ class HttpLogger implements MiddlewareInterface
      * @param ResponseInterface|null $response
      * @return string
      */
-    public function buildLog($id, ServerRequestInterface $request, ResponseInterface $response = null)
+    public function logEvent(ServerRequestInterface $request, ResponseInterface $response = null)
     {
-        $method = $request->getMethod();
-        $uri = $request->getUri()->getPath();
-        $type = $response ? 'Response' : 'Request';
-        $message = "$type($id) = $method $uri";
-        if ($response) {
-            $message .= ' => ' . $response->getStatusCode();
-        }
-        return $message . PHP_EOL;
+        $uri = $request->getUri();
+        parse_str($uri->getQuery(), $query);
+        $startTime = $request->getAttribute('start-time');
+
+        $this->logger->info(
+            'HTTP Req/Res',
+            [
+                'request-id' => $request->getAttribute('request-id'),
+                'duration' => microtime(true) - $startTime,
+                'http' => [
+                    'status-code' => $response->getStatusCode(),
+                    'method' => $request->getMethod(),
+                    'scheme' => $uri->getScheme(),
+                    'host' => $uri->getHost(),
+                    'port' => $uri->getPort(),
+                    'path' => $uri->getPath(),
+                    'query' => $query,
+                ]
+            ]
+        );
     }
 }
